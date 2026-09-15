@@ -17,8 +17,8 @@ diff_drive_base_controller:
     wheel_radius: 0.0855      # rayon BotWheel ODrive (m)
 
     wheel_separation_multiplier: 1.0
-    # Signe a confirmer au test de sens des roues (phase 2, roue par roue).
-    left_wheel_radius_multiplier: 1.0
+    # Roue gauche montee en miroir : signe inverse (confirme au test phase 2).
+    left_wheel_radius_multiplier: -1.0
     right_wheel_radius_multiplier: 1.0
 
     publish_rate: 50.0
