@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>odrive_rob_accueil</name>
+  <version>0.0.1</version>
+  <description>Base mobile differentielle du robot d'accueil : 2 BotWheels ODrive via ros2_control (SocketCAN can1).</description>
+  <maintainer email="tristan@zone404mars.fr">Zone404Mars</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Plugin materiel ODrive (fournit ODriveHardwareInterface). -->
+  <exec_depend>odrive_ros2_control</exec_depend>
+  <!-- Pile ros2_control : gestionnaire, controllers, outils URDF. -->
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <!-- Noeud teleop clavier (teleop_arrows.py). -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Interface ros2_control de la base mobile du robot d'accueil. -->
+  <!-- Plugin ODrive sur SocketCAN. node_id 0 = roue gauche, 1 = roue droite. -->
+  <xacro:macro name="rob_accueil_ros2_control" params="name prefix use_mock_hardware">
+
+    <ros2_control name="${name}" type="system">
+      <xacro:unless value="${use_mock_hardware}">
+        <hardware>
+          <plugin>odrive_ros2_control_plugin/ODriveHardwareInterface</plugin>
+          <!-- Les ODrive sont sur can1 (dongle USB gs_usb de l'hote), pas can0. -->
+          <param name="can">can1</param>
+        </hardware>
+      </xacro:unless>
+      <xacro:if value="${use_mock_hardware}">
+        <!-- Materiel simule : rejoue les commandes en etats, pour tester sans ODrive ni CAN. -->
+        <hardware>
+          <plugin>mock_components/GenericSystem</plugin>
+          <param name="calculate_dynamics">true</param>
+        </hardware>
+      </xacro:if>
+
+      <!-- Interfaces declarees pour les deux chemins : le plugin ODrive les -->
+      <!-- exporte de toute facon en code, mock_components les lit dans l'URDF. -->
+      <joint name="${prefix}left_wheel_joint">
+        <param name="node_id">0</param>
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+      <joint name="${prefix}right_wheel_joint">
+        <param name="node_id">1</param>
+        <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </ros2_control>
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,50 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz - frequence de la boucle de controle
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_base_controller:
+      type: diff_drive_controller/DiffDriveController
+
+diff_drive_base_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    wheel_separation: 0.415   # entraxe mesure (m)
+    wheel_radius: 0.0855      # rayon BotWheel ODrive (m)
+
+    wheel_separation_multiplier: 1.0
+    # Signe a confirmer au test de sens des roues (phase 2, roue par roue).
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+    open_loop: false
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.5   # s - arret des roues si plus aucune commande recue
+
+    # Limites prudentes pour les premiers essais, a ajuster ensuite.
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 0.3       # m/s
+    linear.x.min_velocity: -0.3
+    linear.x.max_acceleration: 0.5   # m/s^2
+    linear.x.min_acceleration: -0.5
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 0.8      # rad/s
+    angular.z.min_velocity: -0.8
+    angular.z.max_acceleration: 1.0  # rad/s^2
+    angular.z.min_acceleration: -1.0

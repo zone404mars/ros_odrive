@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!-- Base differentielle du robot d'accueil : 2 BotWheels ODrive, entraxe 0.415 m. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rob_accueil">
+
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="use_mock_hardware" default="false" />
+
+  <!-- Property tiree de l'arg : ${prefix} n'accepte pas directement un arg. -->
+  <xacro:property name="prefix" value="$(arg prefix)" />
+
+  <!-- Geometrie mesuree du robot. -->
+  <xacro:property name="wheel_separation" value="0.415" />  <!-- entraxe roue gauche/droite (m) -->
+  <xacro:property name="wheel_radius" value="0.0855" />     <!-- rayon BotWheel ODrive (m) -->
+  <xacro:property name="wheel_width" value="0.050" />       <!-- largeur roue, cosmetique (m) -->
+  <xacro:property name="PI" value="3.1415926535897931" />
+
+  <!-- base_link : milieu de l'essieu, a la hauteur de l'axe des roues. -->
+  <link name="${prefix}base_link"/>
+
+  <!-- Roue gauche : cote +y (convention ROS), ODrive node_id 0. -->
+  <joint name="${prefix}left_wheel_joint" type="continuous">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}left_wheel"/>
+    <origin xyz="0 ${wheel_separation/2} 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="${prefix}left_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+      <geometry>
+        <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Roue droite : cote -y, ODrive node_id 1. -->
+  <joint name="${prefix}right_wheel_joint" type="continuous">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}right_wheel"/>
+    <origin xyz="0 -${wheel_separation/2} 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="${prefix}right_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
+      <geometry>
+        <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Interface ros2_control : plugin ODrive, can1, node_id 0 gauche / 1 droite. -->
+  <xacro:include filename="$(find odrive_rob_accueil)/urdf/rob_accueil.ros2_control.xacro" />
+  <xacro:rob_accueil_ros2_control
+    name="RobAccueil" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
+
+</robot>
