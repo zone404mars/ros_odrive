@@ -9,6 +9,7 @@ from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
@@ -33,7 +34,8 @@ def generate_launch_description():
         PathJoinSubstitution([pkg, "urdf", "rob_accueil.urdf.xacro"]), " ",
         "use_mock_hardware:=", use_mock_hardware,
     ])
-    robot_description = {"robot_description": robot_description_content}
+    # value_type=str : sinon le controller_manager tente de lire l'URDF comme du YAML.
+    robot_description = {"robot_description": ParameterValue(robot_description_content, value_type=str)}
     controllers_file = PathJoinSubstitution([pkg, "config", "rob_accueil_controllers.yaml"])
 
     # controller_manager : charge l'URDF et le fichier de controllers.
