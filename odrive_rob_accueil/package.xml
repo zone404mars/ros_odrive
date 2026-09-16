@@ -22,6 +22,11 @@
   <exec_depend>rclpy</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
 
+  <!-- Teleop manette (teleop_joy.launch.py) : driver joystick SDL2 et
+       conversion /joy vers TwistStamped. -->
+  <exec_depend>joy</exec_depend>
+  <exec_depend>teleop_twist_joy</exec_depend>
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>

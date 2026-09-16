@@ -1,0 +1,38 @@
+# Teleop manette pour la base du robot d'accueil (DualShock 4 en Bluetooth).
+# Seul le stick gauche agit : vertical = vitesse lineaire, horizontal = rotation.
+# Aucun index de bouton n'est utilise, ce qui rend ce fichier insensible aux
+# differences de numerotation entre DualShock 4 et DualShock 5.
+
+joy_node:
+  ros__parameters:
+    # Index SDL du joystick. joy en Jazzy s'appuie sur SDL2, qui enumere les
+    # peripheriques de /dev/input/event* ; 0 designe le premier trouve.
+    device_id: 0
+    # Zone morte du stick : sous ce seuil l'axe est force a zero. Evite la
+    # derive lente d'un stick qui ne revient jamais exactement au centre.
+    # La valeur par defaut de joy, 0.3, ampute un tiers de la course utile.
+    deadzone: 0.10
+    # Hz - republie l'etat meme stick immobile. Sans cela le noeud n'emet qu'au
+    # changement : stick tenu, plus aucun message, et le controller coupe les
+    # roues sur cmd_vel_timeout (0.5 s) alors que l'operateur pousse encore.
+    autorepeat_rate: 20.0
+
+teleop_twist_joy_node:
+  ros__parameters:
+    # diff_drive_controller 4.x s'abonne a un TwistStamped, pas a un Twist.
+    publish_stamped_twist: true
+    # Repere porte par l'en-tete ; le controller s'en sert pour l'horodatage.
+    frame: base_link
+
+    # Pas de gachette homme-mort : le stick seul commande la base.
+    require_enable_button: false
+
+    axis_linear:
+      x: 1        # stick gauche vertical, vers l'avant = positif
+    scale_linear:
+      x: 0.3      # m/s a fond de course, aligne sur linear.x.max_velocity
+
+    axis_angular:
+      yaw: 0      # stick gauche horizontal, vers la gauche = positif
+    scale_angular:
+      yaw: 0.8    # rad/s a fond de course, aligne sur angular.z.max_velocity
